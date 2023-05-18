@@ -24,4 +24,4 @@ rust:
     WORKDIR /project
     COPY --dir Cargo.toml src /project/
     RUN cargo build --release
-    SAVE ARTIFACT /project/target/x86_64-unknown-linux-musl/release/github-readme-stats-docker AS LOCAL bin
+    SAVE ARTIFACT /project/target/x86_64-unknown-linux-musl/release/github-readme-stats-docker

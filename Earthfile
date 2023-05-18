@@ -1,5 +1,5 @@
 VERSION 0.7
-FROM node:18-alpine
+FROM busybox
 
 build-all-platforms:
     BUILD --platform=linux/amd64 +build
@@ -15,6 +15,7 @@ build:
 
 # See https://github.com/anuraghazra/github-readme-stats#on-other-platforms
 github-readme-stats:
+    FROM node:18-alpine
     WORKDIR /app
     COPY github-readme-stats /app
     RUN npm install express

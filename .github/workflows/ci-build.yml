@@ -16,6 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        submodules: 'true'
         token: ${{ secrets.GH_TOKEN }}
     - name: Earthly installation
       uses: earthly/actions-setup@v1.0.7

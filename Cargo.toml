@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-ctrlc = "3.2.5"
-warp = "0.3"
+hyper = { version = "0.14.26", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
+ctrlc = "3.2.5"

@@ -1,3 +1,4 @@
 Cargo.lock
 bin
 target
+.env

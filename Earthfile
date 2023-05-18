@@ -1,17 +1,20 @@
 VERSION 0.7
+FROM node:18-alpine
+
+build-all-platforms:
+    BUILD --platform=linux/amd64 +build
+    BUILD --platform=linux/arm/v8 +build
+    BUILD --platform=linux/arm/v7 +build
 
 build:
-    BUILD +rust
     FROM +github-readme-stats
-    COPY +rust/github-readme-stats-docker /app/run
-    RUN chmod 777 run
+    COPY --chmod=777 +rust/github-readme-stats-docker /app/run
     EXPOSE 80
     CMD [ "./run" ]
     SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker
 
 # See https://github.com/anuraghazra/github-readme-stats#on-other-platforms
 github-readme-stats:
-    FROM node:18-alpine
     WORKDIR /app
     COPY github-readme-stats /app
     RUN npm install express
@@ -20,8 +23,21 @@ github-readme-stats:
     SAVE IMAGE docker.io/crusaders/github-readme-stats-docker-raw
 
 rust:
-    FROM ekidd/rust-musl-builder:stable
+    ARG TARGETPLATFORM
+    ARG TARGETOS
+    IF [ "$TARGETPLATFORM" = "linux/amd64" ]
+        FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=x86_64-musl
+    ELSE IF [ "$TARGETPLATFORM" = "linux/arm/v8" ]
+        FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=aarch64-musl
+    ELSE IF [ "$TARGETPLATFORM" = "linux/arm/v7" ]
+        FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=armv7-musleabihf
+    END
+    RUN ls /project/target
+    SAVE ARTIFACT /project/target/*-unknown-${TARGETOS}-*/release/github-readme-stats-docker
+
+rust-build:
+    ARG COMPILE_IMAGE_TAG=x86_64-musl
+    FROM messense/rust-musl-cross:$COMPILE_IMAGE_TAG
     WORKDIR /project
     COPY --dir Cargo.toml src /project/
     RUN cargo build --release
-    SAVE ARTIFACT /project/target/x86_64-unknown-linux-musl/release/github-readme-stats-docker

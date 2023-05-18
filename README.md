@@ -33,5 +33,5 @@ docker run -it -p 8080:80 -e GITHUB_USER=Crusader99 -e GITHUB_TOKEN=ghp_eTwj... 
 
 3. Request custom profile stats:
    - Example: [http://localhost:8080/top-langs?username=Crusader99&layout=compact](http://localhost:8080/top-langs?username=Crusader99&layout=compact)
-   - Note: The `username` parameter must match the configured `GITHUB_USER` environment variable.
+   - Note: The `username` parameter must match the configured `GITHUB_USER` environment variable
    - For more examples, refer to the documentation of [github-readme-stats](https://github-readme-stats.vercel.app/)

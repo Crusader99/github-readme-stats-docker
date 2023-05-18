@@ -51,7 +51,7 @@ async fn handle_request(reqest: Request<Body>) -> Result<Response<Body>, Error> 
 
 fn forward_request_to(reqest: Request<Body>, target_host: String) -> ResponseFuture {
     // Target server address
-    let target_uri = format!("{}{}", target_host, reqest.uri().path());
+    let target_uri = format!("{}{}", target_host, reqest.uri().path_and_query().expect("Path & query should not be empty").as_str());
     let target_uri: Uri = target_uri.parse().unwrap();
 
     // Initialize the HTTP client
@@ -69,8 +69,6 @@ fn forward_request_to(reqest: Request<Body>, target_host: String) -> ResponseFut
 
     // Create a new request
     let target_req = target_req_builder.body(reqest.into_body()).unwrap();
-
-    // reqest.uri_mut()
 
     // Forward the request to the target server
     return client.request(target_req);

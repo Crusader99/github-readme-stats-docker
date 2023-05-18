@@ -4,7 +4,6 @@ build:
     BUILD +rust
     FROM +github-readme-stats
     COPY +rust/github-readme-stats-docker /app/run
-    SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker-ex
     RUN chmod 777 run
     CMD [ "./run" ]
     SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker

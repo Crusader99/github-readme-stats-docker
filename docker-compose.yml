@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  grafana:
+    image: crusaders/github-readme-stats-docker
+    environment:
+      GITHUB_USER: Crusader99
+      GITHUB_TOKEN: ghp_eTwj...
+    ports:
+      - '80:80'

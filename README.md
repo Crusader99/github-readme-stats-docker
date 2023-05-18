@@ -1,25 +1,37 @@
 <p align="center">
- <img width="100px" src="https://res.cloudinary.com/anuraghazra/image/upload/v1594908242/logo_ccswme.svg" align="center" alt="GitHub Readme Stats" />
- <h2 align="center">GitHub Readme Stats for Docker</h2>
- <p align="center">Annoying "<a href="https://github.com/anuraghazra/github-readme-stats/issues/1471">maximum retries exceeded</a>" errors? Self-host private <a href="https://github.com/anuraghazra/github-readme-stats">github-readme-stats</a> instance on Docker!</p>
-</p>
-<p align="center">
-  <a href="https://hub.docker.com/r/crusaders/github-readme-stats-docker">
-    <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/crusaders/github-readme-stats-docker" />
-  </a>
-  <a>
-     <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Crusader99/github-readme-stats-docker">
-  </a>
-  <a href="http://opensource.org/licenses/MIT">
-    <img alt="License" src="https://img.shields.io/github/license/mdouchement/standardfile.svg" />
-  </a>
-  <br />
-  <br />
+  <img width="100px" src="https://res.cloudinary.com/anuraghazra/image/upload/v1594908242/logo_ccswme.svg" align="center" alt="GitHub Readme Stats" />
+  <h2 align="center">GitHub Readme Stats for Docker</h2>
+  <p align="center">
+    <a href="https://hub.docker.com/r/crusaders/github-readme-stats-docker">
+      <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/crusaders/github-readme-stats-docker" />
+    </a>
+    <a>
+      <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Crusader99/github-readme-stats-docker">
+    </a>
+    <a href="http://opensource.org/licenses/MIT">
+      <img alt="License" src="https://img.shields.io/github/license/mdouchement/standardfile.svg" />
+    </a>
+  </p>
+  <p align="center">Annoying "<a href="https://github.com/anuraghazra/github-readme-stats/issues/1471">maximum retries exceeded</a>" errors? Self-host private <a href="https://github.com/anuraghazra/github-readme-stats">github-readme-stats</a> instance on Docker!</p>
 </p>
 
 ---
 
-Start Docker container on port 8080:
+1. Create `GITHUB_TOKEN`:
+   - Go to Settings, then Developer settings 
+   - Personal access tokens (classic) -> Generate new token (classic)
+   - Select scopes: `repo:status`, `repo_deployment`, `public_repo`
+   - Generate token
+
+2. Start Docker container:
+   - Environment variables have to be updated
+   - The container will only allow API requests to the configured `GITHUB_USER`
+   - This example starts the container on port `8080`
 ```
 docker run -it -p 8080:80 -e GITHUB_USER=Crusader99 -e GITHUB_TOKEN=ghp_eTwj... crusaders/github-readme-stats-docker
 ```
+
+3. Request custom profile stats:
+   - Example: [http://localhost:8080/top-langs?username=Crusader99&layout=compact&langs_count=8&theme=github_dark&hide_border=true](http://localhost:8080/top-langs?username=Crusader99&layout=compact&langs_count=8&theme=github_dark&hide_border=true)
+   - Note: The `username` parameter must match the one configured in the `GITHUB_USER` environment variable
+   - For more examples, refer to the documentation of [github-readme-stats](https://github-readme-stats.vercel.app/)

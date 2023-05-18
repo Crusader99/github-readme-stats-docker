@@ -5,6 +5,7 @@ build:
     FROM +github-readme-stats
     COPY +rust/github-readme-stats-docker /app/run
     RUN chmod 777 run
+    EXPOSE 80
     CMD [ "./run" ]
     SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker
 
@@ -18,7 +19,7 @@ github-readme-stats:
     CMD [ "node", "express.js" ]
     SAVE IMAGE docker.io/crusaders/github-readme-stats-docker-raw
 
-rust: 
+rust:
     FROM ekidd/rust-musl-builder:stable
     WORKDIR /project
     COPY --dir Cargo.toml src /project/

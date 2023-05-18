@@ -1,5 +1,4 @@
 VERSION 0.7
-FROM busybox
 
 build-all-platforms:
     BUILD --platform=linux/amd64 +build
@@ -26,6 +25,7 @@ github-readme-stats:
 rust:
     ARG TARGETPLATFORM
     ARG TARGETOS
+    FROM --platform=linux/amd64 busybox
     IF [ "$TARGETPLATFORM" = "linux/amd64" ]
         FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=x86_64-musl
     ELSE IF [ "$TARGETPLATFORM" = "linux/arm/v8" ]

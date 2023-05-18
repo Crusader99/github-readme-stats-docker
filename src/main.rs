@@ -1,27 +1,23 @@
-use std::env;
-
 pub mod force_stop;
 pub mod proxy;
 pub mod sub_process;
 
+use force_stop::register_stop_handler;
+use proxy::start_http_proxy;
+use std::env::var;
+use sub_process::start_child_process;
+
 #[tokio::main]
 async fn main() {
     println!("Welcome to github-readme-stats-docker!");
+    register_stop_handler();
 
-    force_stop::register_stop_handler();
-
-    // Retrieve all environment variables as an iterator
-    let env_vars = env::vars();
-
-    // Print the name and value of each variable
-    for (key, value) in env_vars {
-        println!("{}: {}", key, value);
-    }
-
-    // Read the value of the system environment variable "GITHUB_TOKEN"
+    // Read the values of the system environment variables
+    var("GITHUB_USER").expect("Failed to read the GITHUB_USER environment variable");
     let github_token =
-        env::var("GITHUB_TOKEN").expect("Failed to read the TOKEN environment variable");
+        var("GITHUB_TOKEN").expect("Failed to read the GITHUB_TOKEN environment variable");
 
-    sub_process::start_child_process(github_token);
-    proxy::start_http_proxy().await;
+    // Forward requests to actual github-readme-stats subprocess.
+    start_child_process(github_token);
+    start_http_proxy().await;
 }

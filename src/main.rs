@@ -10,6 +10,8 @@ use sub_process::start_child_process;
 #[tokio::main]
 async fn main() {
     println!("Welcome to github-readme-stats-docker!");
+    println!("https://github.com/Crusader99/github-readme-stats-docker");
+    println!("---");
     register_stop_handler();
 
     // Read the values of the system environment variables

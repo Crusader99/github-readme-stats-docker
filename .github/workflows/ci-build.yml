@@ -6,8 +6,16 @@ name: CI-Build
 on:
   push:
     branches: [ main ]
+    paths:
+      - ".github/workflows/ci-build.yml"
+      - "src/**"
+      - "Cargo.*"
   pull_request:
     branches: [ main ]
+    paths:
+      - ".github/workflows/ci-build.yml"
+      - "src/**"
+      - "Cargo.*"
   workflow_dispatch: # Allow to run workflow manually from Actions tab
 
 jobs:

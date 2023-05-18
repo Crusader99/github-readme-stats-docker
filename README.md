@@ -19,7 +19,7 @@
 
 1. Create `GITHUB_TOKEN`:
    - Go to Settings, then Developer settings 
-   - Personal access tokens (classic) -> Generate new token (classic)
+   - Personal access tokens (classic) &rarr; Generate new token (classic)
    - Select scopes: `repo:status`, `repo_deployment`, `public_repo`
    - Generate token
 
@@ -32,6 +32,6 @@ docker run -it -p 8080:80 -e GITHUB_USER=Crusader99 -e GITHUB_TOKEN=ghp_eTwj... 
 ```
 
 3. Request custom profile stats:
-   - Example: [http://localhost:8080/top-langs?username=Crusader99&layout=compact&langs_count=8&theme=github_dark&hide_border=true](http://localhost:8080/top-langs?username=Crusader99&layout=compact&langs_count=8&theme=github_dark&hide_border=true)
-   - Note: The `username` parameter must match the one configured in the `GITHUB_USER` environment variable
+   - Example: [http://localhost:8080/top-langs?username=Crusader99&layout=compact](http://localhost:8080/top-langs?username=Crusader99&layout=compact)
+   - Note: The `username` parameter must match the configured `GITHUB_USER` environment variable.
    - For more examples, refer to the documentation of [github-readme-stats](https://github-readme-stats.vercel.app/)

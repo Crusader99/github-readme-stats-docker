@@ -45,4 +45,4 @@ jobs:
     - name: Docker login
       run: docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password "${{ secrets.DOCKERHUB_PASSWORD }}"
     - name: Build project and push images to repository
-      run: earthly --ci --push +build
+      run: earthly --ci --push +build-all-platforms

@@ -2,8 +2,8 @@ VERSION 0.7
 
 build-all-platforms:
     BUILD --platform=linux/amd64 +build
-    BUILD --platform=linux/arm/v8 +build
     BUILD --platform=linux/arm/v7 +build
+    BUILD --platform=linux/arm64/v8 +build
 
 build:
     FROM +github-readme-stats
@@ -26,12 +26,13 @@ rust:
     ARG TARGETPLATFORM
     ARG TARGETOS
     FROM --platform=linux/amd64 busybox
+    RUN echo $TARGETPLATFORM
     IF [ "$TARGETPLATFORM" = "linux/amd64" ]
         FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=x86_64-musl
-    ELSE IF [ "$TARGETPLATFORM" = "linux/arm/v8" ]
-        FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=aarch64-musl
     ELSE IF [ "$TARGETPLATFORM" = "linux/arm/v7" ]
         FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=armv7-musleabihf
+    ELSE IF [ "$TARGETPLATFORM" = "linux/arm64" ]
+        FROM --platform=linux/amd64 +rust-build --COMPILE_IMAGE_TAG=aarch64-musl
     END
     RUN ls /project/target
     SAVE ARTIFACT /project/target/*-unknown-${TARGETOS}-*/release/github-readme-stats-docker

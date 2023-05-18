@@ -1,0 +1,39 @@
+# Basic workflow that starts an Earthly build via GitHub Actions
+# Created with help from GitHub website and official Earthly docs.
+name: CI-Build
+
+# Control when the CI build will run
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Allow to run workflow manually from Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+    - name: Earthly installation
+      uses: earthly/actions-setup@v1.0.7
+      with:
+        version: v0.7.5
+        github-token: ${{ secrets.GH_TOKEN }}
+    - name: Earthly version
+      run: earthly --version
+    - name: Put back the git branch into git (Earthly uses it for tagging)
+      run: |
+        branch=""
+        if [ -n "$GITHUB_HEAD_REF" ]; then
+          branch="$GITHUB_HEAD_REF"
+        else
+          branch="${GITHUB_REF##*/}"
+        fi
+        git checkout -b "$branch" || true
+    - name: Docker login
+      run: docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password "${{ secrets.DOCKERHUB_PASSWORD }}"
+    - name: Build project and push images to repository
+      run: earthly --ci --push +build

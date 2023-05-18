@@ -16,3 +16,10 @@
   <br />
   <br />
 </p>
+
+---
+
+Start Docker container on port 8080:
+```
+docker run -it -p 8080:80 -e GITHUB_USER=Crusader99 -e GITHUB_TOKEN=ghp_eTwj... crusaders/github-readme-stats-docker
+```

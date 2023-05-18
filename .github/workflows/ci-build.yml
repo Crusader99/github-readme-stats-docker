@@ -10,12 +10,14 @@ on:
       - ".github/workflows/ci-build.yml"
       - "src/**"
       - "Cargo.*"
+      - "Earthfile"
   pull_request:
     branches: [ main ]
     paths:
       - ".github/workflows/ci-build.yml"
       - "src/**"
       - "Cargo.*"
+      - "Earthfile"
   workflow_dispatch: # Allow to run workflow manually from Actions tab
 
 jobs:

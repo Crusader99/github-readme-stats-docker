@@ -17,6 +17,17 @@
 
 ---
 
+#### Features
+- No "[maximum retries exceeded](https://github.com/anuraghazra/github-readme-stats)" errors due to self-hosting instead of using shared instance
+- Permits requests from different users than the configured `GITHUB_USER` to prevent server overload
+- Includes statistics of your private repositories due to using your own `GITHUB_TOKEN`
+- You don't have to pass your `GITHUB_TOKEN` to the 3rd-party hoster [Vercel](https://github.com/anuraghazra/github-readme-stats#on-vercel) (I don't trust them)
+
+
+---
+
+#### Setup
+
 1. Create `GITHUB_TOKEN`:
    - Go to Settings, then Developer settings 
    - Personal access tokens (classic) &rarr; Generate new token (classic)

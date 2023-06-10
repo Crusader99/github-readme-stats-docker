@@ -11,6 +11,7 @@ on:
       - "src/**"
       - "Cargo.*"
       - "Earthfile"
+      - "github-readme-stats"
   pull_request:
     branches: [ main ]
     paths:
@@ -18,6 +19,7 @@ on:
       - "src/**"
       - "Cargo.*"
       - "Earthfile"
+      - "github-readme-stats"
   workflow_dispatch: # Allow to run workflow manually from Actions tab
 
 jobs:

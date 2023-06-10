@@ -22,6 +22,7 @@
 - Permits requests from different users than the configured `GITHUB_USER` to prevent server overload
 - Includes statistics of your private repositories due to using your own `GITHUB_TOKEN`
 - You don't have to pass your `GITHUB_TOKEN` to the 3rd-party hoster [Vercel](https://github.com/anuraghazra/github-readme-stats#on-vercel) (I don't trust them)
+- Images for arm/arm64 available for running on Raspberry Pi or other single board computers 
 
 
 ---

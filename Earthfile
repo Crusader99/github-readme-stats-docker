@@ -6,11 +6,14 @@ build-all-platforms:
     BUILD --platform=linux/arm64/v8 +build
 
 build:
+    ARG EARTHLY_TARGET_TAG
+    ARG TAG=$EARTHLY_TARGET_TAG
     FROM +github-readme-stats
     COPY --chmod=777 +rust/github-readme-stats-docker /app/run
     EXPOSE 80
     CMD [ "./run" ]
-    SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker
+    SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker:latest
+    SAVE IMAGE --push docker.io/crusaders/github-readme-stats-docker:$TAG
 
 # See https://github.com/anuraghazra/github-readme-stats#on-other-platforms
 github-readme-stats:

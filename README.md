@@ -18,11 +18,12 @@
 ---
 
 #### Features
+
 - No "[maximum retries exceeded](https://github.com/anuraghazra/github-readme-stats)" errors due to self-hosting instead of using shared instance
+- Images for arm/arm64 available for running on Raspberry Pi or other single board computers 
 - Permits requests from different users than the configured `GITHUB_USER` to prevent server overload
 - Includes statistics of your private repositories due to using your own `GITHUB_TOKEN`
 - You don't have to pass your `GITHUB_TOKEN` to the 3rd-party hoster [Vercel](https://github.com/anuraghazra/github-readme-stats#on-vercel) (I don't trust them)
-- Images for arm/arm64 available for running on Raspberry Pi or other single board computers 
 
 
 ---
@@ -47,3 +48,9 @@ docker run -it -p 8080:80 -e GITHUB_USER=Crusader99 -e GITHUB_TOKEN=ghp_eTwj... 
    - Example: [http://localhost:8080/top-langs?username=Crusader99&layout=compact](http://localhost:8080/top-langs?username=Crusader99&layout=compact)
    - Note: The `username` parameter must match the configured `GITHUB_USER` environment variable
    - For more examples, refer to the documentation of [github-readme-stats](https://github-readme-stats.vercel.app/)
+
+---
+
+#### License
+
+This project is licensed under the [MIT license](https://github.com/Crusader99/github-readme-stats-docker/blob/master/LICENSE).

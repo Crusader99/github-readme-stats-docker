@@ -1,9 +1,10 @@
 use hyper::client::ResponseFuture;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Client, Error, Request, Response, Server, Uri};
-use std::net::SocketAddr;
 use std::env::var;
-use url::{Url};
+use std::fmt::format;
+use std::net::SocketAddr;
+use url::Url;
 
 pub async fn start_http_proxy() {
     println!("Starting proxy server to prevent unauthorized access...");
@@ -28,22 +29,28 @@ pub async fn start_http_proxy() {
 async fn handle_request(reqest: Request<Body>) -> Result<Response<Body>, Error> {
     // Target server host address
     let target_host = format!("http://localhost:9000");
-    let target_path = format!("{}{}", target_host, reqest.uri().path_and_query().expect("Path & query should not be empty").as_str());
+    let target_query = reqest
+        .uri()
+        .path_and_query()
+        .expect("Path & query should not be empty");
+    let target_path = format!("{}{}", target_host, target_query.as_str());
 
     // Analyze the HTTP request and decide if it should be approved
-    if is_request_approved(target_path) {
-        // Forward the request to the target server
-        let forwarded_request = forward_request_to(reqest, target_host);
-
-        forwarded_request.await
-    } else {
-        // If the request is not approved, send an appropriate error response to the client
-        let response = Response::builder()
-            .status(403)
-            .body(Body::from("Forbidden"))
-            .unwrap();
-
-        Ok(response)
+    match check_request_approved(target_path) {
+        Ok(()) => {
+            // Forward the request to the target server
+            let forwarded_request = forward_request_to(reqest, target_host);
+            forwarded_request.await
+        }
+        Err(error) => {
+            // If the request is not approved, send an appropriate error response to the client
+            let message = format!("Forbidden: {}", error);
+            let response = Response::builder()
+                .status(403)
+                .body(Body::from(message))
+                .unwrap();
+            Ok(response)
+        }
     }
 }
 
@@ -72,17 +79,27 @@ fn forward_request_to(reqest: Request<Body>, target_path: String) -> ResponseFut
 }
 
 // Analyze the HTTP request path and decide if it should be approved
-pub fn is_request_approved(target_path: String) -> bool {
+pub fn check_request_approved(target_path: String) -> Result<(), String> {
     let url = Url::parse(&target_path).expect(&format!("Unable to parse path: {}", target_path));
-    let query_parameters : Vec<_> = url.query_pairs().filter(|(key, _)| key == "username").collect();
+    let query_parameters: Vec<_> = url
+        .query_pairs()
+        .filter(|(key, _)| key == "username")
+        .collect();
     if query_parameters.len() < 1 {
-        panic!("No user name provided in request!")
-    }else if query_parameters.len() > 1{
-        panic!("Multiple usernames provided in request!")
+        return Err(String::from("No username provided in request!"));
+    } else if query_parameters.len() > 1 {
+        return Err(String::from("Multiple usernames provided in request!"));
     }
     let github_user_provided = query_parameters[0].1.to_string();
     let github_user_expected = var("GITHUB_USER").unwrap_or("none".to_string());
 
     // Compare user from environment variable with the provided user in HTTP query path
-    return github_user_provided == github_user_expected;
+    if github_user_provided == github_user_expected {
+        return Ok(());
+    } else {
+        return Err(format!(
+            "Username in query '{}' does not match the configured username '{}'!",
+            github_user_provided, github_user_expected
+        ));
+    }
 }

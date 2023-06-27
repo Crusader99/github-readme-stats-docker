@@ -3,6 +3,7 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Client, Error, Request, Response, Server, Uri};
 use std::net::SocketAddr;
 use std::env::var;
+use url::{Url};
 
 pub async fn start_http_proxy() {
     println!("Starting proxy server to prevent unauthorized access...");
@@ -25,15 +26,17 @@ pub async fn start_http_proxy() {
 }
 
 async fn handle_request(reqest: Request<Body>) -> Result<Response<Body>, Error> {
+    // Target server host address
+    let target_host = format!("http://localhost:9000");
+    let target_path = format!("{}{}", target_host, reqest.uri().path_and_query().expect("Path & query should not be empty").as_str());
+
     // Analyze the HTTP request and decide if it should be approved
-    // TODO: improve check and move variable to extra class
-    let github_user = var("GITHUB_USER").expect("Failed to read the GITHUB_USER environment variable");
-    let approved = reqest.uri().query().expect("Expect query not to be empty").contains(&github_user);
+    let url = Url::parse(&target_path).expect(&format!("Unable to parse path: {}", target_path));
+    let github_user_expected = var("GITHUB_USER").expect("Failed to read the GITHUB_USER environment variable");
+    let github_user_provided = url.query_pairs().find(|(key, _)| key == "username").expect("No user name provided in request!").1;
+    let approved = String::from(github_user_provided) == github_user_expected;
 
     if approved {
-        // Target server host address
-        let target_host = format!("http://localhost:9000");
-
         // Forward the request to the target server
         let forwarded_request = forward_request_to(reqest, target_host);
 
@@ -49,10 +52,9 @@ async fn handle_request(reqest: Request<Body>) -> Result<Response<Body>, Error> 
     }
 }
 
-fn forward_request_to(reqest: Request<Body>, target_host: String) -> ResponseFuture {
+fn forward_request_to(reqest: Request<Body>, target_path: String) -> ResponseFuture {
     // Target server address
-    let target_uri = format!("{}{}", target_host, reqest.uri().path_and_query().expect("Path & query should not be empty").as_str());
-    let target_uri: Uri = target_uri.parse().unwrap();
+    let target_uri: Uri = target_path.parse().unwrap();
 
     // Initialize the HTTP client
     let client = Client::new();

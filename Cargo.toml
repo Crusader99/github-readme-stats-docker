@@ -7,3 +7,4 @@ edition = "2021"
 hyper = { version = "0.14.26", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
 ctrlc = "3.2.5"
+url = "2.4.0"

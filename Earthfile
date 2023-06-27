@@ -44,5 +44,6 @@ rust-build:
     ARG COMPILE_IMAGE_TAG=x86_64-musl
     FROM messense/rust-musl-cross:$COMPILE_IMAGE_TAG
     WORKDIR /project
-    COPY --dir Cargo.toml src /project/
+    COPY --dir Cargo.toml src tests /project/
+    RUN cargo test
     RUN cargo build --release

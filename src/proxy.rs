@@ -31,12 +31,7 @@ async fn handle_request(reqest: Request<Body>) -> Result<Response<Body>, Error> 
     let target_path = format!("{}{}", target_host, reqest.uri().path_and_query().expect("Path & query should not be empty").as_str());
 
     // Analyze the HTTP request and decide if it should be approved
-    let url = Url::parse(&target_path).expect(&format!("Unable to parse path: {}", target_path));
-    let github_user_expected = var("GITHUB_USER").expect("Failed to read the GITHUB_USER environment variable");
-    let github_user_provided = url.query_pairs().find(|(key, _)| key == "username").expect("No user name provided in request!").1;
-    let approved = String::from(github_user_provided) == github_user_expected;
-
-    if approved {
+    if is_request_approved(target_path) {
         // Forward the request to the target server
         let forwarded_request = forward_request_to(reqest, target_host);
 
@@ -74,4 +69,20 @@ fn forward_request_to(reqest: Request<Body>, target_path: String) -> ResponseFut
 
     // Forward the request to the target server
     return client.request(target_req);
+}
+
+// Analyze the HTTP request path and decide if it should be approved
+pub fn is_request_approved(target_path: String) -> bool {
+    let url = Url::parse(&target_path).expect(&format!("Unable to parse path: {}", target_path));
+    let query_parameters : Vec<_> = url.query_pairs().filter(|(key, _)| key == "username").collect();
+    if query_parameters.len() < 1 {
+        panic!("No user name provided in request!")
+    }else if query_parameters.len() > 1{
+        panic!("Multiple usernames provided in request!")
+    }
+    let github_user_provided = query_parameters[0].1.to_string();
+    let github_user_expected = var("GITHUB_USER").unwrap_or("none".to_string());
+
+    // Compare user from environment variable with the provided user in HTTP query path
+    return github_user_provided == github_user_expected;
 }

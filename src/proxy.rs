@@ -2,7 +2,6 @@ use hyper::client::ResponseFuture;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Client, Error, Request, Response, Server, Uri};
 use std::env::var;
-use std::fmt::format;
 use std::net::SocketAddr;
 use url::Url;
 

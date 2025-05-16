@@ -12,7 +12,7 @@
       <img alt="License" src="https://img.shields.io/github/license/mdouchement/standardfile.svg" />
     </a>
   </p>
-  <p align="center">Annoying "<a href="https://github.com/anuraghazra/github-readme-stats/issues/1471">maximum retries exceeded</a>" errors? Self-host private <a href="https://github.com/anuraghazra/github-readme-stats">github-readme-stats</a> instance on Docker!</p>
+  <p align="center">Tired of "<a href="https://github.com/anuraghazra/github-readme-stats/issues/1471">maximum retries exceeded</a>" errors? Host your own <a href="https://github.com/anuraghazra/github-readme-stats">github-readme-stats</a> Docker instance!</p>
 </p>
 
 ---
